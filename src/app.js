@@ -10,6 +10,7 @@ import notFound from "./middlewares/notFound.middleware.js";
 import errorHandler from "./middlewares/error.middleware.js";
 
 import healthRoutes from "./routes/health.routes.js";
+import authRoutes from "./routes/auth.routes.js"; 
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use("/api/v1/health", healthRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

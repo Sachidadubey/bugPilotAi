@@ -1,20 +1,20 @@
 import { Redis } from "@upstash/redis";
-import logger from "./logger.js";
+import logger    from "./logger.js";
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+let redisClient;
 
-const testRedis = async () => {
-  try {
-    await redis.set("health", "ok");
-    logger.info("Upstash Redis Connected");
-  } catch (error) {
-    logger.error(`Redis Error: ${error.message}`);
-  }
+export const connectRedis = async () => {
+  redisClient = new Redis({
+    url:   process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+
+  await redisClient.set("health", "ok");
+  logger.info("Upstash Redis connected");
 };
 
-testRedis();
-
-export default redis;
+// Direct client export — no wrapper, no proxy
+export const getRedis = () => {
+  if (!redisClient) throw new Error("Redis not initialized");
+  return redisClient;
+};

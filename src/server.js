@@ -1,21 +1,25 @@
-import dotenv from "dotenv";
-dotenv.config();
+// ES module imports hoist hote hain, isliye dotenv ko
+// sab se pehle load karne ka sahi tarika:
+import { config } from "dotenv";
+config();  // synchronous — yahan tak sab env loaded
 
-import connectDB from "./config/db.js";
-import app from "./app.js";
+import logger          from "./config/logger.js";
+import connectDB       from "./config/db.js";
+import { connectRedis } from "./config/redis.js";
+import app             from "./app.js";
 
 const startServer = async () => {
-  const { default: redis } = await import("./config/redis.js");
-
-  await connectDB();
-
-  await redis.set("startup", "ok");
-
-  const PORT = process.env.PORT || 5000;
-
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+  try {
+    await connectDB();
+    await connectRedis();
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      logger.info(`Server running on port ${PORT} [${process.env.NODE_ENV}]`);
+    });
+  } catch (err) {
+    logger.error(`Server startup failed: ${err.message}`);
+    process.exit(1);
+  }
 };
 
 startServer();
