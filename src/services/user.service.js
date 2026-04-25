@@ -3,7 +3,9 @@ import Debug    from "../models/debug.model.js";
 import User     from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import { getRedis }              from "../config/redis.js";
-import { deleteFromCloudinary }  from "../config/cloudinary.js";
+import { deleteFromCloudinary } from "../config/cloudinary.js";
+import { uploadToCloudinary } from "../config/cloudinary.js";
+import fs from "fs";
 
 // ── Get profile ───────────────────────────────────────────────────────────────
 export const getProfileService = async (userId) => {
@@ -15,18 +17,41 @@ export const getProfileService = async (userId) => {
 };
 
 // ── Update profile ────────────────────────────────────────────────────────────
-export const updateProfileService = async (userId, { name }) => {
+
+
+export const updateProfileService = async (userId, fields, file) => {
   const user = await User.findById(userId);
   if (!user) throw new ApiError(404, "User not found");
 
-  if (name) user.name = name;
+  // Text fields update
+  if (fields.name  !== undefined) user.name  = fields.name;
+  if (fields.bio   !== undefined) user.bio   = fields.bio;
+  if (fields.phone !== undefined) user.phone = fields.phone;
+
+  // Avatar upload
+  if (file) {
+    // Delete old avatar from Cloudinary if exists
+    if (user.avatar?.public_id) {
+      await deleteFromCloudinary(user.avatar.public_id);
+    }
+
+    const uploaded = await uploadToCloudinary(file.path, "bugpilot/avatars");
+
+    user.avatar = {
+      url:       uploaded.secure_url,
+      public_id: uploaded.public_id,
+    };
+
+    // Cleanup temp file
+    if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+  }
+
   await user.save({ validateBeforeSave: false });
 
   return await User.findById(userId).select(
-    "-refreshToken -loginAttempts -lockUntil"
+    "-refreshToken -loginAttempts -lockUntil -password"
   );
 };
-
 // ── Usage stats ───────────────────────────────────────────────────────────────
 export const getUsageStatsService = async (userId) => {
   const redis    = getRedis();

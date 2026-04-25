@@ -15,6 +15,20 @@ const userSchema = new mongoose.Schema(
 
     loginAttempts: { type: Number, default: 0 },
     lockUntil:     { type: Date,   default: null },
+  
+  bio: {
+  type:    String,
+  default: "",
+  maxlength: 200,
+},
+phone: {
+  type:    String,
+  default: "",
+},
+avatar: {
+  url:       { type: String, default: "" },
+  public_id: { type: String, default: "" },
+    },
   },
   { timestamps: true }
 );
