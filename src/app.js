@@ -12,6 +12,8 @@ import errorHandler from "./middlewares/error.middleware.js";
 
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js"; 
+import userRoutes from "./routes/user.routes.js";
+
 
 const app = express();
 
@@ -32,6 +34,7 @@ app.use(morgan("dev"));
 
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/debug", debugRoutes);
 
 
