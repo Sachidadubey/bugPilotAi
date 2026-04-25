@@ -5,8 +5,8 @@ import User           from "../models/user.model.js";
 
 export const protect = asyncHandler(async (req, _res, next) => {
   const token =
-    req.cookies?.accessToken ||
-    req.headers.authorization?.replace("Bearer ", "");
+    req.cookies?.accessToken.trim()  ||
+    req.headers.authorization?.replace("Bearer ", "").trim();
 
   if (!token) throw new ApiError(401, "Access token required");
 
