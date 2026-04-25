@@ -4,6 +4,7 @@ import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import debugRoutes from "./routes/debug.routes.js";
 
 import { globalLimiter } from "./middlewares/rateLimit.middleware.js";
 import notFound from "./middlewares/notFound.middleware.js";
@@ -31,6 +32,8 @@ app.use(morgan("dev"));
 
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/debug", debugRoutes);
+
 
 app.use(notFound);
 app.use(errorHandler);

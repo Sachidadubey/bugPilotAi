@@ -32,3 +32,10 @@ export const requireSubscription = (...plans) => (req, _res, next) => {
   }
   next();
 };
+
+export const requireVerified = (req, _res, next) => {
+  if (!req.user?.isVerified) {
+    throw new ApiError(403, "Please verify your email to access this feature");
+  }
+  next();
+};
