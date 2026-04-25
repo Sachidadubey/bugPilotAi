@@ -14,6 +14,10 @@ export const protect = asyncHandler(async (req, _res, next) => {
 
   const user = await User.findById(decoded.id).select("-password -refreshToken");
   if (!user) throw new ApiError(401, "User not found");
+   // Ban check — banned user can't access anything
+  if (user.isBanned) {
+    throw new ApiError(403, `Account banned. Reason: ${user.banReason}`);
+  }
 
   req.user = user;
   next();

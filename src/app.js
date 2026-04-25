@@ -5,6 +5,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import debugRoutes from "./routes/debug.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 import { globalLimiter } from "./middlewares/rateLimit.middleware.js";
 import notFound from "./middlewares/notFound.middleware.js";
@@ -50,6 +51,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/debug", debugRoutes);
 app.use("/api/v1/payment",  paymentRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 
 app.use(notFound);

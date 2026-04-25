@@ -3,34 +3,48 @@ import bcrypt   from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    name:     { type: String, required: true, trim: true },
-    email:    { type: String, required: true, unique: true, lowercase: true, trim: true },
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, select: false },
 
-    role:         { type: String, enum: ["user", "admin"], default: "user" },
-    subscription: { type: String, enum: ["free", "pro"],  default: "free"  },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+    subscription: { type: String, enum: ["free", "pro"], default: "free" },
 
-    isVerified:   { type: Boolean, default: false },
-    refreshToken: { type: String,  default: null, select: false },
+    isVerified: { type: Boolean, default: false },
+    refreshToken: { type: String, default: null, select: false },
 
     loginAttempts: { type: Number, default: 0 },
-    lockUntil:     { type: Date,   default: null },
+    lockUntil: { type: Date, default: null },
   
-  bio: {
-  type:    String,
-  default: "",
-  maxlength: 200,
-},
-phone: {
-  type:    String,
-  default: "",
-},
-avatar: {
-  url:       { type: String, default: "" },
-  public_id: { type: String, default: "" },
+    bio: {
+      type: String,
+      default: "",
+      maxlength: 200,
+    },
+    phone: {
+      type: String,
+      default: "",
+    },
+    avatar: {
+      url: { type: String, default: "" },
+      public_id: { type: String, default: "" },
+    },
+  
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
+    banReason: {
+      type: String,
+      default: "",
+    },
+    bannedAt: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }
+
 );
 
 userSchema.index({ role: 1, subscription: 1 });
