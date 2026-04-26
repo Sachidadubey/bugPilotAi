@@ -59,6 +59,7 @@ const authLimiter = rateLimit({
   legacyHeaders:   false,
   message: { success: false, message: "Too many auth attempts. Try in 15 minutes." },
 });
+app.set("trust proxy", 1);
 app.get("/", (req, res) => {
   res.status(200).send("BugPilot API Live");
 });
