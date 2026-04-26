@@ -59,7 +59,9 @@ const authLimiter = rateLimit({
   legacyHeaders:   false,
   message: { success: false, message: "Too many auth attempts. Try in 15 minutes." },
 });
-
+app.get("/", (req, res) => {
+  res.status(200).send("BugPilot API Live");
+});
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth",authLimiter, authRoutes);
 app.use("/api/v1/user", userRoutes);
