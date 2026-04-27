@@ -1,0 +1,68 @@
+{
+  "name": "bugpilot-ai",
+  "displayName": "BugPilot AI Debugger",
+  "description": "Debug errors instantly using AI — right inside VS Code",
+  "version": "1.0.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "bugpilot.analyzeSelection",
+        "title": "BugPilot AI: Analyze selected code"
+      },
+      {
+        "command": "bugpilot.analyzeTerminal",
+        "title": "BugPilot AI: Analyze terminal error"
+      },
+      {
+        "command": "bugpilot.openPanel",
+        "title": "BugPilot AI: Open panel"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "bugpilot.analyzeSelection",
+          "when":    "editorHasSelection",
+          "group":   "navigation"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id":    "bugpilot",
+          "title": "BugPilot AI",
+          "icon":  "$(bug)"
+        }
+      ]
+    },
+    "views": {
+      "bugpilot": [
+        {
+          "type":  "webview",
+          "id":    "bugpilot.sidebar",
+          "name":  "BugPilot AI"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "BugPilot AI",
+      "properties": {
+        "bugpilot.apiUrl": {
+          "type":    "string",
+          "default": "http://localhost:5000/api/v1",
+          "description": "BugPilot AI backend URL"
+        },
+        "bugpilot.apiToken": {
+          "type":        "string",
+          "default":     "",
+          "description": "Your JWT access token from BugPilot AI"
+        }
+      }
+    }
+  }
+}

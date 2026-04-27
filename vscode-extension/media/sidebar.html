@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--vscode-font-family);
+      font-size: var(--vscode-font-size);
+      color: var(--vscode-foreground);
+      background: var(--vscode-sideBar-background);
+      padding: 12px;
+    }
+
+    h3 {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      resize: vertical;
+      background: var(--vscode-input-background);
+      color: var(--vscode-input-foreground);
+      border: 1px solid var(--vscode-input-border, #464646);
+      font-family: var(--vscode-editor-font-family);
+      font-size: 12px;
+      min-height: 100px;
+    }
+
+    select,
+    button {
+      width: 100%;
+      padding: 6px 8px;
+      margin-top: 6px;
+      border-radius: 4px;
+      background: var(--vscode-button-background);
+      color: var(--vscode-button-foreground);
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    button:hover {
+      background: var(--vscode-button-hoverBackground);
+    }
+
+    .btn-secondary {
+      background: var(--vscode-button-secondaryBackground, #5a5a5a);
+      color: var(--vscode-button-secondaryForeground, #fff);
+    }
+
+    .section {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid;
+    }
+
+    .root {
+      border-color: #f87171;
+      background: rgba(248, 113, 113, 0.08);
+    }
+
+    .solution {
+      border-color: #34d399;
+      background: rgba(52, 211, 153, 0.08);
+    }
+
+    .amber {
+      border-color: #fbbf24;
+      background: rgba(251, 191, 36, 0.08);
+    }
+
+    .lbl {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .txt {
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    pre {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 11px;
+      white-space: pre-wrap;
+      margin-top: 8px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 10px;
+    }
+
+    .error-msg {
+      color: #f87171;
+      font-size: 12px;
+      padding: 8px;
+      background: rgba(248, 113, 113, 0.1);
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 16px;
+      opacity: 0.6;
+      font-size: 12px;
+    }
+
+    .mode-row {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .mode-row button {
+      flex: 1;
+      padding: 5px;
+      font-size: 11px;
+    }
+
+    .mode-row button.active {
+      background: var(--vscode-button-background);
+    }
+
+    .tokens {
+      font-size: 10px;
+      opacity: 0.5;
+      text-align: right;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h3>🐛 BugPilot AI</h3>
+
+  <div class="lbl" style="margin-bottom:4px">Code / Error</div>
+  <textarea id="input"
+    placeholder="Select code in editor and use right-click → 'BugPilot AI: Analyze'&#10;&#10;Or paste error/code here directly..."></textarea>
+
+  <select id="lang">
+    <option value="unknown">Auto detect</option>
+    <option value="javascript">JavaScript</option>
+    <option value="typescript">TypeScript</option>
+    <option value="python">Python</option>
+    <option value="java">Java</option>
+    <option value="cpp">C++</option>
+    <option value="go">Go</option>
+    <option value="rust">Rust</option>
+    <option value="other">Other</option>
+  </select>
+
+  <div class="mode-row">
+    <button class="active" data-mode="analyze">🔍 Analyze</button>
+    <button data-mode="fix">🔧 Fix</button>
+    <button data-mode="optimize">⚡ Optimize</button>
+  </div>
+
+  <button id="analyzeBtn" style="margin-top:8px">Analyze with AI</button>
+  <button class="btn-secondary" id="settingsBtn">⚙ Set API Token</button>
+
+  <div id="loading" class="loading" style="display:none">AI analyzing...</div>
+  <div id="result"></div>
+
+  <script>
+    const vscode = acquireVsCodeApi();
+    let activeMode = "analyze";
+
+    // Mode buttons
+    document.querySelectorAll(".mode-row button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mode-row button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeMode = btn.dataset.mode;
+      });
+    });
+
+    document.getElementById("analyzeBtn").addEventListener("click", () => {
+      const text = document.getElementById("input").value.trim();
+      const lang = document.getElementById("lang").value;
+      if (!text) return;
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("result").innerHTML = "";
+      vscode.postMessage({ type: "ANALYZE", text, language: lang, mode: activeMode });
+    });
+
+    document.getElementById("settingsBtn").addEventListener("click", () => {
+      vscode.postMessage({ type: "OPEN_SETTINGS" });
+    });
+
+    window.addEventListener("message", (e) => {
+      const msg = e.data;
+      document.getElementById("loading").style.display = "none";
+
+      if (msg.type === "RESULT" || msg.type === "ANALYSIS_RESULT") {
+        const d = msg.payload?.data || msg.payload;
+        const a = d?.analysis;
+        if (!a) { showError("No analysis returned"); return; }
+
+        // Pre-fill input if sent from editor command
+        if (msg.selectedCode) {
+          document.getElementById("input").value = msg.selectedCode;
+        }
+
+        let html = "";
+        if (a.rootCause) html += section("root", "🎯 Root Cause", a.rootCause);
+        if (a.explanation) html += section("amber", "📖 Explanation", a.explanation);
+        if (a.solution) html += section("solution", "✅ Solution", a.solution);
+        if (a.codeSnippet) html += `
+      <div class="section root" style="border-color:#818cf8">
+        <div class="lbl">💻 Fixed Code</div>
+        <pre>${escape(a.codeSnippet)}</pre>
+      </div>`;
+        if (a.tags?.length) html += `
+      <div class="tags">${a.tags.map(t => `<span class="tag">#${t}</span>`).join("")}</div>`;
+        if (d.tokensUsed) html += `<div class="tokens">${d.tokensUsed} tokens</div>`;
+
+        document.getElementById("result").innerHTML = html;
+      }
+
+      if (msg.type === "ERROR") { showError(msg.message); }
+    });
+
+    function section(cls, label, text) {
+      return `<div class="section ${cls}"><div class="lbl">${label}</div><div class="txt">${text}</div></div>`;
+    }
+    function showError(msg) {
+      document.getElementById("result").innerHTML = `<div class="error-msg">${msg}</div>`;
+    }
+    function escape(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+  </script>
+</body>
+
+</html>
