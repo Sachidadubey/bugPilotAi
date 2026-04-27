@@ -25,8 +25,21 @@ app.use(helmet());
 app.use(compression());
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,
-  credentials: true
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman)
+    if (!origin) return callback(null, true);
+    const allowed = [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://127.0.0.1:5173",
+    ];
+    if (allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked: ${origin}`));
+    }
+  },
+  credentials: true,
 }));
 
 app.use(globalLimiter);
@@ -59,7 +72,7 @@ const authLimiter = rateLimit({
   legacyHeaders:   false,
   message: { success: false, message: "Too many auth attempts. Try in 15 minutes." },
 });
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 app.get("/", (req, res) => {
   res.status(200).send("BugPilot API Live");
 });

@@ -1,34 +1,65 @@
-import { Router }          from "express";
-import { protect }         from "../middlewares/auth.middleware.js";
-import { requireVerified } from "../middlewares/auth.middleware.js";
-import { authorizeRoles }  from "../middlewares/auth.middleware.js";
-import { validate }           from "../middlewares/validate.middleware.js";
+import { Router } from "express";
+
+import {
+  protect,
+  requireVerified,
+  authorizeRoles,
+} from "../middlewares/auth.middleware.js";
+
+import { validate } from "../middlewares/validate.middleware.js";
+
 import {
   banUserSchema,
   updateUserPlanSchema,
 } from "../validators/admin.validator.js";
+
 import {
-  getDashboardStats, getAllUsers, getUserDetail,
-  banUser, unbanUser, updateUserPlan, deleteUser,
-  getRevenueAnalytics, getAiUsage,
+  getDashboardStats,
+  getAllUsers,
+  getUserDetail,
+  banUser,
+  unbanUser,
+  updateUserPlan,
+  deleteUser,
+  getRevenueAnalytics,
+  getAiUsage,
 } from "../controllers/admin.controller.js";
 
 const router = Router();
 
-// All admin routes — must be admin role
-router.use(protect, requireVerified, authorizeRoles("admin"));
+router.use(
+  protect,
+  requireVerified,
+  authorizeRoles("admin")
+);
 
-// Dashboard
-router.get("/stats",    getDashboardStats);
-router.get("/revenue",  getRevenueAnalytics);
+router.get("/stats", getDashboardStats);
+router.get("/revenue", getRevenueAnalytics);
 router.get("/ai-usage", getAiUsage);
 
-// User management
-router.get   ("/users",              getAllUsers);
-router.get   ("/users/:userId",      getUserDetail);
-router.patch ("/users/:userId/ban",  validate(banUserSchema),        banUser);
-router.patch ("/users/:userId/unban",                                unbanUser);
-router.patch ("/users/:userId/plan", validate(updateUserPlanSchema), updateUserPlan);
-router.delete("/users/:userId",                                      deleteUser);
+router.get("/users", getAllUsers);
+router.get("/users/:userId", getUserDetail);
+
+router.patch(
+  "/users/:userId/ban",
+  validate(banUserSchema),
+  banUser
+);
+
+router.patch(
+  "/users/:userId/unban",
+  unbanUser
+);
+
+router.patch(
+  "/users/:userId/plan",
+  validate(updateUserPlanSchema),
+  updateUserPlan
+);
+
+router.delete(
+  "/users/:userId",
+  deleteUser
+);
 
 export default router;

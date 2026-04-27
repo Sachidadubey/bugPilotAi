@@ -15,7 +15,7 @@ export const initGemini = () => {
 
   // gemini-2.0-flash — fastest, cheapest, good for text analysis
  textModel = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",   // ← yeh use karo
+  model: "gemini-2.0-flash-lite",   // Use the flash variant for faster responses
   generationConfig: {
     temperature:     0.2,
     maxOutputTokens: 2048,

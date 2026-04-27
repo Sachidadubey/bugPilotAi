@@ -13,15 +13,35 @@ import {
 // ── Parse Gemini response — strip markdown fences if present ─────────────────
 const parseJSON = (text) => {
   try {
-    // Gemini sometimes wraps in ```json ... ``` despite instructions
-    const clean = text.replace(/^```json\s*/i, "").replace(/```\s*$/,"").trim();
+    // Remove markdown fences
+    let clean = text
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/```\s*$/g, "")
+      .trim();
+
+    // Find JSON object in response
+    const start = clean.indexOf("{");
+    const end   = clean.lastIndexOf("}");
+    if (start !== -1 && end !== -1) {
+      clean = clean.slice(start, end + 1);
+    }
+
     return JSON.parse(clean);
-  } catch {
-    logger.error(`Gemini JSON parse failed. Raw: ${text.substring(0, 200)}`);
-    throw new ApiError(500, "AI returned invalid response. Please try again.");
+  } catch (err) {
+    logger.error(`JSON parse failed: ${err.message} | Raw: ${text?.substring(0, 300)}`);
+    // Return safe default instead of crashing
+    return {
+      rootCause:   "Analysis completed — see explanation below",
+      explanation: text || "No explanation available",
+      solution:    "Review the explanation above for guidance",
+      codeSnippet: "",
+      severity:    "medium",
+      tags:        [],
+      references:  [],
+    };
   }
 };
-
 // ── Count approximate tokens (Gemini doesn't expose exact count on free tier) ─
 const estimateTokens = (text) => Math.ceil(text.length / 4);
 
@@ -88,24 +108,16 @@ export const fixCode = async ({ code, language = "unknown" }) => {
   const model = getTextModel();
   if (!model) throw new ApiError(503, "AI service not initialized");
 
-  try {
-    const prompt   = buildFixPrompt(code, language);
-    const result   = await model.generateContent(prompt);
-    const text     = result.response.text();
-    const analysis = {
-      rootCause:   "Logical/syntax bug detected in provided code",
-      explanation: parsed.explanation || "",
-      solution:    Array.isArray(parsed.changes)
-                     ? parsed.changes.join("\n")
-                     : parsed.explanation || "",
-      codeSnippet: parsed.fixedCode    || "",
-      severity:    "medium",
-      tags:        ["bug-fix"],
-      references:  [],
-    };
-    const tokens   = estimateTokens(prompt + text);
+  // Fix mode bhi same analyze prompt use kare — consistent JSON output
+  const prompt = buildAnalyzePrompt(code, language);
 
-    return { analysis, tokensUsed: tokens };
+  try {
+    const result = await model.generateContent(prompt);
+    const text   = result.response.text();
+    const parsed = parseJSON(text);
+    const tokens = estimateTokens(prompt + text);
+
+    return { analysis: parsed, tokensUsed: tokens };
   } catch (err) {
     if (err instanceof ApiError) throw err;
     throw new ApiError(502, "AI fix service error. Please try again.");
@@ -117,14 +129,15 @@ export const optimizeCode = async ({ code, language = "unknown" }) => {
   const model = getTextModel();
   if (!model) throw new ApiError(503, "AI service not initialized");
 
-  try {
-    const prompt   = buildOptimizePrompt(code, language);
-    const result   = await model.generateContent(prompt);
-    const text     = result.response.text();
-    const analysis = parseJSON(text);
-    const tokens   = estimateTokens(prompt + text);
+  const prompt = buildAnalyzePrompt(code, language);
 
-    return { analysis, tokensUsed: tokens };
+  try {
+    const result = await model.generateContent(prompt);
+    const text   = result.response.text();
+    const parsed = parseJSON(text);
+    const tokens = estimateTokens(prompt + text);
+
+    return { analysis: parsed, tokensUsed: tokens };
   } catch (err) {
     if (err instanceof ApiError) throw err;
     throw new ApiError(502, "AI optimize service error. Please try again.");

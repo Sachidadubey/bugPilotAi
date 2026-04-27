@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL:         import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
-
+console.log("API URL:", import.meta.env.VITE_API_URL);
 // Attach token to every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");

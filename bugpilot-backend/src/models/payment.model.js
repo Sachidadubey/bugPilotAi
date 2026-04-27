@@ -3,32 +3,59 @@ import mongoose from "mongoose";
 const paymentSchema = new mongoose.Schema(
   {
     userId: {
-      type:     mongoose.Schema.Types.ObjectId,
-      ref:      "User",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-      index:    true,
+      index: true,
     },
-    // Razorpay IDs
-    orderId:   { type: String, required: true, unique: true },
-    paymentId: { type: String, default: "" },
-    signature: { type: String, default: "" },
 
-    // Plan details
-    plan:   { type: String, enum: ["pro"], default: "pro" },
-    amount: { type: Number, required: true }, // in paise (INR * 100)
+    orderId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
+    paymentId: {
+      type: String,
+      default: "",
+    },
+
+    signature: {
+      type: String,
+      default: "",
+    },
+
+    plan: {
+      type: String,
+      enum: ["pro"],
+      default: "pro",
+    },
+
+    amount: {
+      type: Number,
+      required: true,
+    },
 
     status: {
-      type:    String,
-      enum:    ["created", "paid", "failed", "refunded"],
+      type: String,
+      enum: ["created", "paid", "failed", "refunded"],
       default: "created",
     },
 
-    // Subscription period
-    subscribedAt: { type: Date, default: null },
-    expiresAt:    { type: Date, default: null },
+    subscribedAt: {
+      type: Date,
+      default: null,
+    },
 
-    // Razorpay webhook raw event
-    webhookEvent: { type: String, default: "" },
+    expiresAt: {
+      type: Date,
+      default: null,
+    },
+
+    webhookEvent: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

@@ -20,7 +20,7 @@ const reducer = (state, action) => {
   }
 };
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -67,3 +67,5 @@ export const useAuth = () => {
   if (!ctx) throw new Error("useAuth must be inside AuthProvider");
   return ctx;
 };
+
+export default AuthProvider;

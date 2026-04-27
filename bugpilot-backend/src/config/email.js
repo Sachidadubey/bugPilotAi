@@ -1,8 +1,6 @@
 import nodemailer from "nodemailer";
-import logger     from "./logger.js";
+import logger from "./logger.js";
 
-// Top-level transporter mat banao — env tab tak load nahi hoti
-// Har sendMail call pe fresh transporter banao — negligible overhead hai
 const createTransporter = () =>
   nodemailer.createTransport({
     host:   "smtp.gmail.com",
@@ -16,7 +14,7 @@ const createTransporter = () =>
   });
 
 export const sendMail = async ({ to, subject, html }) => {
-  const transporter = createTransporter(); // function call hone par env ready hoti hai
+  const transporter = createTransporter();
   const info = await transporter.sendMail({
     from: `"BugPilot AI" <${process.env.SMTP_EMAIL}>`,
     to,
