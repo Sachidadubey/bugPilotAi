@@ -5,17 +5,24 @@ let genAI;
 let textModel;
 let visionModel;
 
-export const initGemini = () => {
+export const initGemini = async() => {
   if (!process.env.GEMINI_API_KEY) {
     logger.warn("GEMINI_API_KEY not set — AI features will fail");
     return;
   }
 
   genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+ // Check available models
+  // const res  = await fetch(
+  //   `https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_API_KEY}`
+  // );
+  // const data = await res.json();
+  // const names = data.models?.map(m => m.name) || [];
+  // console.log("AVAILABLE MODELS:", names.join(", "));
 
-  // gemini-2.0-flash — fastest, cheapest, good for text analysis
- textModel = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash-lite",   // Use the flash variant for faster responses
+  
+textModel = genAI.getGenerativeModel({
+  model: "gemini-2.0-flash-lite", // Use latest available model
   generationConfig: {
     temperature:     0.2,
     maxOutputTokens: 2048,

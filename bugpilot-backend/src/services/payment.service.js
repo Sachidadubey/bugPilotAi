@@ -54,7 +54,7 @@ export const createOrderService = async (userId, { plan }) => {
     amount:      planConfig.amount,
     currency:    planConfig.currency,
     description: planConfig.description,
-    paymentId:       process.env.RAZORPAY_KEY_ID,
+    keyId:       process.env.RAZORPAY_KEY_ID,
     user: {
       name:  user.name,
       email: user.email,

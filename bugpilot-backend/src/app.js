@@ -24,23 +24,29 @@ const app = express();
 app.use(helmet());
 app.use(compression());
 
-app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman)
-    if (!origin) return callback(null, true);
-    const allowed = [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://127.0.0.1:5173",
-    ];
-    if (allowed.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS blocked: ${origin}`));
-    }
-  },
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      const allowed = [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5173"
+      ];
+
+      if (
+        allowed.includes(origin) ||
+        origin.startsWith("chrome-extension://")
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked: ${origin}`));
+    },
+    credentials: true,
+  })
+);
 
 app.use(globalLimiter);
 
@@ -77,9 +83,9 @@ app.get("/", (req, res) => {
   res.status(200).send("BugPilot API Live");
 });
 app.use("/api/v1/health", healthRoutes);
-app.use("/api/v1/auth",authLimiter, authRoutes);
-app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/auth", authLimiter, authRoutes);
 app.use("/api/v1/debug", debugRoutes);
+app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/payment",  paymentRoutes);
 app.use("/api/v1/admin", adminRoutes);
 

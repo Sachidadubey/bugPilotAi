@@ -46,23 +46,29 @@ const parseJSON = (text) => {
 const estimateTokens = (text) => Math.ceil(text.length / 4);
 
 // ── Analyze text / code ───────────────────────────────────────────────────────
-export const analyzeText = async ({ input, language = "unknown" }) => {
-  const model  = getTextModel();
+export const analyzeText = async ({ input, language = "unknown" }, retries = 1) => {
+  const model = getTextModel();
   if (!model) throw new ApiError(503, "AI service not initialized");
 
   const prompt = buildAnalyzePrompt(input, language);
 
   try {
-    const result   = await model.generateContent(prompt);
-    const text     = result.response.text();
-    const analysis = parseJSON(text);
-    const tokens   = estimateTokens(prompt + text);
-
-    return { analysis, tokensUsed: tokens };
+    const result = await model.generateContent(prompt);
+    const text   = result.response.text();
+    return {
+      analysis:   parseJSON(text),
+      tokensUsed: estimateTokens(prompt + text),
+    };
   } catch (err) {
+    // Agar quota error hai aur retries baki hain
+    if (err.message?.includes("429") && retries > 0) {
+      logger.warn(`Gemini quota hit — retrying in 30s (${retries} retries left)`);
+      await new Promise(resolve => setTimeout(resolve, 30000)); // 30 sec wait
+      return analyzeText({ input, language }, retries - 1);
+    }
     if (err instanceof ApiError) throw err;
     logger.error(`Gemini text analysis failed: ${err.message}`);
-    throw new ApiError(502, "AI service error. Please try again.");
+    throw new ApiError(502, "AI service temporarily unavailable. Please try again in a minute.");
   }
 };
 

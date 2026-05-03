@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "BugPilot AI Debugger",
+  "name": "BugPilot",
   "version": "1.0.0",
   "description": "Debug errors instantly from any webpage using AI",
   "permissions": [
@@ -26,7 +26,7 @@
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
-      "128": "icons/icon.png"
+      "128": "icons/icon.jpg"
     }
   }
 }
