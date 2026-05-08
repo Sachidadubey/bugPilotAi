@@ -43,9 +43,10 @@
     "views": {
       "bugpilot": [
         {
-          "type":  "webview",
-          "id":    "bugpilot.sidebar",
-          "name":  "BugPilot AI"
+        "type":  "webview",
+        "id":    "bugpilot.sidebar",
+        "name":  "BugPilot AI",
+        "icon":  "media/icon.png"
         }
       ]
     },
