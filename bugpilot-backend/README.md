@@ -1,4 +1,4 @@
-# BugPilot AI — Backend
+---------------------------------------------------------@BugPilot AI — Backend -----------------------------------------------------------------------
 
 AI-powered debugging platform. Paste your error, get the root cause and fix. Built as a production SaaS with subscription tiers, admin controls, and multi-platform support (web, Chrome extension, VS Code extension).
 
