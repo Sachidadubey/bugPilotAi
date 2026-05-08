@@ -1,4 +1,4 @@
-# BugPilot AI
+-----------------------------------------------  @BugPilot AI ---------------------------------------------------------------------------------------------
 
 AI-powered debugging platform. Paste your error, get the root cause and fix. Available as a web app, Chrome extension, and VS Code extension — built as a production SaaS with subscription tiers, admin controls, and multi-platform support.
 
