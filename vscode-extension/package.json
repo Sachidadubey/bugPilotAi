@@ -54,7 +54,7 @@
       "properties": {
         "bugpilot.apiUrl": {
           "type":    "string",
-          "default": "http://localhost:5000/api/v1",
+        "default": "https://bugpilotai.onrender.com/api/v1",
           "description": "BugPilot AI backend URL"
         },
         "bugpilot.apiToken": {

@@ -5,7 +5,7 @@ let genAI;
 let textModel;
 let visionModel;
 
-export const initGemini = async() => {
+export const initGemini = () => {
   if (!process.env.GEMINI_API_KEY) {
     logger.warn("GEMINI_API_KEY not set — AI features will fail");
     return;

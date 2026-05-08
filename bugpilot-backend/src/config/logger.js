@@ -9,12 +9,12 @@ const logger = winston.createLogger({
         `${timestamp} [${level.toUpperCase()}] ${message}`
     )
   ),
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({
-      filename: "logs/app.log"
-    })
-  ]
+ transports: [
+  new winston.transports.Console(),
+  ...(process.env.NODE_ENV !== "production"
+    ? [new winston.transports.File({ filename: "logs/app.log" })]
+    : []),
+]
 });
 
 export default logger;

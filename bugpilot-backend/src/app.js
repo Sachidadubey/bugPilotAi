@@ -5,8 +5,8 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
-// import mongoSanitize from "express-mongo-sanitize";// Prevent NoSQL injection
-// import hpp           from "hpp";  Prevent HTTP Parameter Pollution
+import mongoSanitize from "express-mongo-sanitize";// Prevent NoSQL injection
+import hpp           from "hpp"; // Prevent HTTP Parameter Pollution
 import debugRoutes from "./routes/debug.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 
@@ -28,12 +28,12 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
-
-      const allowed = [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5173"
-      ];
+  const allowed = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5173"
+].filter(Boolean);
 
       if (
         allowed.includes(origin) ||
@@ -67,8 +67,8 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
-// app.use(mongoSanitize()); // NoSQL injection prevent
-// app.use(hpp());    // HTTP Parameter Pollution prevent
+app.use(mongoSanitize()); // NoSQL injection prevent
+app.use(hpp());    // HTTP Parameter Pollution prevent
 
 // Stricter rate limit for auth routes to prevent brute-force
 const authLimiter = rateLimit({
@@ -78,7 +78,7 @@ const authLimiter = rateLimit({
   legacyHeaders:   false,
   message: { success: false, message: "Too many auth attempts. Try in 15 minutes." },
 });
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 app.get("/", (req, res) => {
   res.status(200).send("BugPilot API Live");
 });

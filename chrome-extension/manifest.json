@@ -5,9 +5,9 @@
   "description": "Debug errors instantly from any webpage using AI",
   "permissions": ["sidePanel", "activeTab", "scripting", "storage", "contextMenus"],
   "host_permissions": [
-    "http://localhost:5000/*",
-    "https://*/*"
-  ],
+  "https://bugpilotai.onrender.com/*",
+  "https://*/*"
+ ],
   "background": {
     "service_worker": "background/service-worker.js"
   },

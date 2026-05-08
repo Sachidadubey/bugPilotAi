@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:5000/api/v1";
+const API_BASE = "https://bugpilotai.onrender.com/api/v1";
+
 
 // ── Single onInstalled ────────────────────────────────────────────────────────
 chrome.runtime.onInstalled.addListener(() => {
