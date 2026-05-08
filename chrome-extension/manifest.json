@@ -3,12 +3,7 @@
   "name": "BugPilot",
   "version": "1.0.0",
   "description": "Debug errors instantly from any webpage using AI",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "storage",
-    "contextMenus"
-  ],
+  "permissions": ["sidePanel", "activeTab", "scripting", "storage", "contextMenus"],
   "host_permissions": [
     "http://localhost:5000/*",
     "https://*/*"
@@ -23,10 +18,13 @@
       "run_at": "document_idle"
     }
   ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
   "action": {
-    "default_popup": "popup/popup.html",
-    "default_icon": {
-      "128": "icons/icon.jpg"
-    }
-  }
+    "default_title": "BugPilot AI"
+  },
+"icons": {
+  "128": "icons/icon.jpg"
+}
 }

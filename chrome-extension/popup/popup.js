@@ -54,9 +54,9 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     const data = await chrome.runtime.sendMessage({
       type: "LOGIN", payload: { email, password },
     });
-    if (!data.success) throw new Error(data.message);
-    currentUser = data.user;
-    showMain(data.user);
+ if (!data?.user) throw new Error(data?.message || "Login failed");
+currentUser = data.user;
+showMain(data.user);
   } catch (err) {
     showErr(errWrap, errMsg, err.message || "Login failed. Check credentials.");
   } finally {

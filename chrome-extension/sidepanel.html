@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>BugPilot AI</title>
+  <link rel="stylesheet" href="popup/popup.css" />
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-brand">
+      <div class="header-icon">🐛</div>
+      <div>
+        <div class="header-title">BugPilot AI</div>
+        <div class="header-sub">AI-powered debugger</div>
+      </div>
+    </div>
+    <span class="plan-pill" id="planPill">Free</span>
+  </div>
+
+  <!-- Auth section -->
+  <div id="authSection" class="auth-wrap">
+    <div class="auth-icon">🐛</div>
+    <h2>Sign in to debug</h2>
+    <p>Connect your BugPilot AI account<br />to start analyzing errors instantly</p>
+    <div class="auth-form">
+      <div id="authErr" class="err-alert" style="display:none">
+        <span class="err-icon">⚠</span>
+        <span id="authErrMsg"></span>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="emailInput" placeholder="you@gmail.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Your password" />
+      </div>
+      <button class="btn btn-primary" id="loginBtn">
+        <span>🔐</span> Sign In
+      </button>
+    </div>
+  </div>
+
+  <!-- Main section -->
+  <div id="mainSection" style="display:none">
+    <div class="user-bar">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div>
+          <div class="user-name" id="userName">User</div>
+          <div class="user-email" id="userEmail"></div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="analyze">⚡ Analyze</button>
+      <button class="tab" data-tab="errors">🔴 Page Errors</button>
+    </div>
+
+    <div id="tabAnalyze" class="debug-section">
+      <div class="section-label">Input Type</div>
+      <div class="input-type-row">
+        <div class="type-btn active" data-type="code">💻 Code</div>
+        <div class="type-btn" data-type="text">📄 Error</div>
+        <div class="type-btn" data-type="log">📋 Log</div>
+      </div>
+      <div class="section-label" id="inputLabel">Code Snippet</div>
+      <textarea id="textInput" placeholder="Paste your buggy code or error message here..."></textarea>
+      <div class="char-count"><span id="charCount">0</span> characters</div>
+      <div class="lang-row">
+        <select id="langSelect">
+          <option value="unknown">Auto detect language</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+          <option value="php">PHP</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="analyzeBtn" style="flex:1">🔍 Analyze with AI</button>
+        <button class="btn btn-ghost" id="clearBtn" style="padding:9px 12px">✕</button>
+      </div>
+      <div id="loadingWrap" class="loading-wrap" style="display:none">
+        <div class="spinner-ring"></div>
+        <div class="loading-text">Analyzing with Gemini AI...</div>
+        <div class="loading-sub">Finding root cause and fix</div>
+      </div>
+      <div id="resultWrap"></div>
+    </div>
+
+    <div id="tabErrors" class="debug-section" style="display:none">
+      <div class="section-label" style="margin-bottom:10px">Console errors on this page</div>
+      <button class="btn btn-full" id="grabBtn"
+        style="background:#1e293b;border:1px solid #334155;color:#94a3b8;margin-bottom:12px">
+        🔴 Grab Page Errors
+      </button>
+      <div id="errorsListWrap"></div>
+    </div>
+  </div>
+
+  <script src="popup/popup.js"></script>
+</body>
+
+</html>

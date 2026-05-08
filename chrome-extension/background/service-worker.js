@@ -1,7 +1,9 @@
 const API_BASE = "http://localhost:5000/api/v1";
 
-// ── Context menu — right click on selected text ──────────────────────────────
+// ── Single onInstalled ────────────────────────────────────────────────────────
 chrome.runtime.onInstalled.addListener(() => {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+
   chrome.contextMenus.create({
     id:       "bugpilot-analyze",
     title:    "🐛 Analyze with BugPilot AI",
@@ -9,6 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+// ── Context menu click ────────────────────────────────────────────────────────
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== "bugpilot-analyze") return;
 
@@ -17,29 +20,30 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
   const result = await analyzeText(text);
 
-  // Store result — popup reads this
   await chrome.storage.local.set({
     lastAnalysis: result,
     lastInput:    text,
     timestamp:    Date.now(),
   });
 
-  // Open popup
-  chrome.action.openPopup?.();
+  chrome.sidePanel.open({ tabId: tab.id });
 });
 
-// ── Message listener from popup ───────────────────────────────────────────────
+// ── Message listener ──────────────────────────────────────────────────────────
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg.type === "ANALYZE_TEXT") {
     analyzeText(msg.payload.text, msg.payload.language)
       .then(sendResponse)
       .catch((err) => sendResponse({ success: false, message: err.message }));
-    return true; // keep channel open for async
+    return true;
   }
 
   if (msg.type === "GET_PAGE_ERRORS") {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { type: "GET_ERRORS" }, sendResponse);
+      if (!tabs[0]) return sendResponse({ errors: [] });
+      chrome.tabs.sendMessage(tabs[0].id, { type: "GET_ERRORS" }, (res) => {
+        sendResponse(res || { errors: [] });
+      });
     });
     return true;
   }
@@ -52,7 +56,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   }
 });
 
-// ── Auth ─────────────────────────────────────────────────────────────────────
+// ── Auth ──────────────────────────────────────────────────────────────────────
 async function loginUser(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method:  "POST",
@@ -69,7 +73,7 @@ async function loginUser(email, password) {
   return data.data;
 }
 
-// ── AI analyze ───────────────────────────────────────────────────────────────
+// ── AI Analyze ────────────────────────────────────────────────────────────────
 async function analyzeText(text, language = "unknown") {
   const { token } = await chrome.storage.local.get("token");
   if (!token) throw new Error("Not logged in");
