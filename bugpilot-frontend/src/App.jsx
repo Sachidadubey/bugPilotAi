@@ -2,14 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import AuthProvider from "./context/AuthContext";
 import { ProtectedRoute, AdminRoute, GuestRoute } from "./components/layout/ProtectedRoute";
-
-// Auth
-import Register       from "./pages/auth/Register";
-import Login          from "./pages/auth/Login";
-import VerifyOtp      from "./pages/auth/VerifyOtp";
-import ForgotPassword from "./pages/auth/ForgotPassword";
+import Register       from "./pages/auth/register";
+import Login          from "./pages/auth/login";
+import VerifyOtp      from "./pages/auth/verifyOtp";
+import ForgotPassword from "./pages/auth/forgotPassword";
 import ResetPassword  from "./pages/auth/ResetPassword";
-
 // Dashboard
 import Dashboard   from "./pages/dashboard/Dashboard";
 import DebugPage   from "./pages/dashboard/DebugPage";
