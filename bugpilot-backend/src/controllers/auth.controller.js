@@ -13,10 +13,13 @@ const ACCESS_COOKIE_OPTIONS  = { ...COOKIE_OPTIONS, maxAge: 15 * 60 * 1000 };
 const REFRESH_COOKIE_OPTIONS = { ...COOKIE_OPTIONS, maxAge: 7 * 24 * 60 * 60 * 1000 };
 
 export const register = asyncHandler(async (req, res) => {
-  await authSvc.registerUser(req.body);
-  res.status(201).json(new ApiResponse(201, null, " User  Registered successfully. Check email for OTP."));
+  const data = await authSvc.registerUser(req.body);
+  res
+    .cookie("accessToken",  data.accessToken,  ACCESS_COOKIE_OPTIONS)
+    .cookie("refreshToken", data.refreshToken, REFRESH_COOKIE_OPTIONS)
+    .status(201)
+    .json(new ApiResponse(201, { user: data.user, accessToken: data.accessToken }, "Registration successful"));
 });
-
 export const login = asyncHandler(async (req, res) => {
   const data = await authSvc.loginUser(req.body);
   res

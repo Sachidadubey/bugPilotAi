@@ -14,19 +14,20 @@ export default function Register() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); setError("");
-    try {
-      await registerApi(form);
-      toast.success("Account created! Check your email for OTP.");
-      navigate("/verify-otp", { state: { email: form.email } });
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true); setError("");
+  try {
+    const { data } = await registerApi(form);
+    localStorage.setItem("accessToken", data.data.accessToken);
+    toast.success("Account created! Welcome to BugPilot AI.");
+    navigate("/dashboard");
+  } catch (err) {
+    setError(err.response?.data?.message || "Registration failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="auth-wrapper">
