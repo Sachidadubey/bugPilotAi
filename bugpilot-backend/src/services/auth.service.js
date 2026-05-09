@@ -19,7 +19,7 @@ export const registerUser = async ({ name, email, password }) => {
   const exists = await User.findOne({ email });
   if (exists) throw new ApiError(409, "Email already registered");
   const user = await User.create({ name, email, password });
-  await _sendOtp(user.email);
+  // await _sendOtp(user.email);
   return null;
 };
 
@@ -48,9 +48,9 @@ export const loginUser = async ({ email, password }) => {
 
   await user.resetLoginAttempts();
 
-  if (!user.isVerified) {
-    throw new ApiError(403, "Email not verified. Check your inbox.");
-  }
+  // if (!user.isVerified) {
+  //   throw new ApiError(403, "Email not verified. Check your inbox.");
+  // }
 
   const accessToken  = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
