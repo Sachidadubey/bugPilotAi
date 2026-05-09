@@ -18,9 +18,26 @@ const Keys = {
 export const registerUser = async ({ name, email, password }) => {
   const exists = await User.findOne({ email });
   if (exists) throw new ApiError(409, "Email already registered");
-  const user = await User.create({ name, email, password });
-  // await _sendOtp(user.email);
-  return null;
+  
+  const user = await User.create({ name, email, password, isVerified: true });
+  
+  const accessToken  = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
+  user.refreshToken  = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  return {
+    accessToken,
+    refreshToken,
+    user: {
+      id:           user._id,
+      name:         user.name,
+      email:        user.email,
+      role:         user.role,
+      subscription: user.subscription,
+      isVerified:   user.isVerified,
+    },
+  };
 };
 
 export const loginUser = async ({ email, password }) => {
