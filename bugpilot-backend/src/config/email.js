@@ -4,8 +4,9 @@ import logger from "./logger.js";
 const createTransporter = () =>
   nodemailer.createTransport({
     host:   "smtp.gmail.com",
-    port:   587,
-    secure: false,
+    port: 587,
+  secure: false,
+  family: 4, 
     auth: {
       user: process.env.SMTP_EMAIL,
       pass: process.env.SMTP_PASSWORD,
