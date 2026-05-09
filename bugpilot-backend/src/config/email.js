@@ -1,24 +1,24 @@
-import nodemailer from "nodemailer";
 import logger from "./logger.js";
 
-const createTransporter = () =>
-  nodemailer.createTransport({
-    host:  "smtp-relay.brevo.com", //"smtp.gmail.com",
-    port:  587, // 465 for SSL, 587 for TLS
-    secure: true,      
-    auth: {
-      user: process.env.SMTP_EMAIL,
-      pass: process.env.SMTP_PASSWORD,
+export const sendMail = async ({ to, subject, html }) => {
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "api-key": process.env.BREVO_API_KEY,
     },
+    body: JSON.stringify({
+      sender:      { name: "BugPilot AI", email: process.env.SMTP_EMAIL },
+      to:          [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
   });
 
-export const sendMail = async ({ to, subject, html }) => {
-  const transporter = createTransporter();
-  const info = await transporter.sendMail({
-    from: `"BugPilot AI" <${process.env.SMTP_EMAIL}>`,
-    to,
-    subject,
-    html,
-  });
-  logger.info(`Email sent to ${to} — ${info.messageId}`);
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Brevo API error: ${err}`);
+  }
+
+  logger.info(`Email sent to ${to} via Brevo API`);
 };
