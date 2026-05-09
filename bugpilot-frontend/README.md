@@ -9,6 +9,14 @@ React + Vite web application for BugPilot AI. Handles JWT auth with auto-refresh
 The frontend is the primary web interface for BugPilot AI. Users register, verify email via OTP, and land on a dashboard where they paste code, error messages, log files, or screenshots and receive Gemini AI analysis back in seconds. Pro users get unlimited daily analyses. Admins get a separate role-protected panel to manage users and view platform revenue and usage analytics.
 
 ---
+****************************************************************************************
+## Live Demo
+
+| Platform | URL |
+|----------|-----|
+| 🌐 Web App | [bug-pilot-ai.vercel.app](https://bug-pilot-ai.vercel.app) |
+
+*****************************************************************************************
 
 ## Tech stack
 
