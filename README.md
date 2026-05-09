@@ -9,7 +9,14 @@ Developers waste hours debugging. BugPilot AI takes your error message, code sni
 Free tier: 10 analyses per day. Pro tier: unlimited.
 
 ---
+*************************************************************************************************************************************************
+## Live Demo
 
+| Platform | URL |
+|----------|-----|
+| 🌐 Web App | [bug-pilot-ai.vercel.app](https://bug-pilot-ai.vercel.app) |
+| ⚙️ Backend API | [bugpilotai.onrender.com](https://bugpilotai.onrender.com) |
+*************************************************************************************************************************************************
 ## Repository structure
 
 ```
