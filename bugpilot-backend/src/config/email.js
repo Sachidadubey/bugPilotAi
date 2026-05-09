@@ -3,9 +3,9 @@ import logger from "./logger.js";
 
 const createTransporter = () =>
   nodemailer.createTransport({
-    host:   "smtp.gmail.com",
-    port:   465,
-    secure: true,      // 465 is the secure port for SMTP
+    host:  "smtp-relay.brevo.com", //"smtp.gmail.com",
+    port:  587, // 465 for SSL, 587 for TLS
+    secure: true,      
     auth: {
       user: process.env.SMTP_EMAIL,
       pass: process.env.SMTP_PASSWORD,
