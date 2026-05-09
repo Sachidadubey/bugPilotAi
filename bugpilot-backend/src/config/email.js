@@ -4,14 +4,12 @@ import logger from "./logger.js";
 const createTransporter = () =>
   nodemailer.createTransport({
     host:   "smtp.gmail.com",
-    port: 587,
-  secure: false,
-  family: 4, 
+    port:   465,
+    secure: true,      // 465 is the secure port for SMTP
     auth: {
       user: process.env.SMTP_EMAIL,
       pass: process.env.SMTP_PASSWORD,
     },
-    tls: { rejectUnauthorized: false },
   });
 
 export const sendMail = async ({ to, subject, html }) => {
