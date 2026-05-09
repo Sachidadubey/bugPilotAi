@@ -30,9 +30,10 @@ app.use(
       if (!origin) return callback(null, true);
   const allowed = [
   process.env.CLIENT_URL,
+  "https://bug-pilot-ai.vercel.app",
+  "https://bug-pilot-5acz45zmq-dubey-s-projects.vercel.app",
   "http://localhost:5173",
   "http://localhost:5174",
-  "http://127.0.0.1:5173"
 ].filter(Boolean);
 
       if (
