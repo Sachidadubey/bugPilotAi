@@ -1,22 +1,24 @@
-import nodemailer from "nodemailer";
 import logger from "./logger.js";
 
-const createTransporter = () =>
-  nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.SMTP_EMAIL,
-      pass: process.env.SMTP_PASSWORD,
+export const sendMail = async ({ to, subject, html }) => {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
     },
+    body: JSON.stringify({
+      from: "BugPilot AI <onboarding@resend.dev>",
+      to: [to],
+      subject,
+      html,
+    }),
   });
 
-export const sendMail = async ({ to, subject, html }) => {
-  const transporter = createTransporter();
-  const info = await transporter.sendMail({
-    from: `"BugPilot AI" <${process.env.SMTP_EMAIL}>`,
-    to,
-    subject,
-    html,
-  });
-  logger.info(`Email sent to ${to} — ${info.messageId}`);
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Resend error: ${err}`);
+  }
+
+  logger.info(`Email sent to ${to} via Resend`);
 };
