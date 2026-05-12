@@ -4,6 +4,27 @@ import * as paymentSvc from "../services/payment.service.js";
 import crypto from "crypto";
 import ApiError from "../utils/ApiError.js";
 
+
+
+export const createExternalOrder = asyncHandler(async (req, res) => {
+  const { amount, userId } = req.body;
+
+  const order = await paymentSvc.createExternalOrder(
+    amount,
+    userId
+  );
+
+  res
+    .status(201)
+    .json(
+      new ApiResponse(
+        201,
+        order,
+        "External order created successfully"
+      )
+    );
+});
+
 export const createOrder = asyncHandler(async (req, res) => {
   const data = await paymentSvc.createOrderService(req.user._id, req.body);
   res.status(201).json(new ApiResponse(201, data, "Order created"));

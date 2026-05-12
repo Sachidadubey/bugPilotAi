@@ -26,9 +26,9 @@ const paymentSchema = new mongoose.Schema(
     },
 
     plan: {
-      type: String,
-      enum: ["pro"],
-      default: "pro",
+  type: String,
+  enum: ["pro", "external"],
+  default: "pro",
     },
 
     amount: {

@@ -7,6 +7,54 @@ import { getRazorpay } from "../config/razorpay.js";
 import { sendMail } from "../config/email.js";
 import { proActivationTemplate } from "../utils/emailTemplates.js";
 
+
+
+
+
+
+// ── Create external order (for mobile / kotlin / external apps) ─────────────
+
+export const createExternalOrder = async (amount, userId) => {
+
+  if (!amount || !userId) {
+    throw new ApiError(400, "amount and userId are required");
+  }
+
+  const user = await User.findById(userId);
+
+  // if (!user) {
+  //   throw new ApiError(404, "User not found");
+  // }
+
+  const razorpay = getRazorpay();
+
+  const order = await razorpay.orders.create({
+    amount: amount * 100, // convert to paise
+    currency: "INR",
+    notes: {
+      userId: userId.toString(),
+      source: "external",
+    },
+  });
+
+  // optional DB save
+  await Payment.create({
+    userId,
+    orderId: order.id,
+    amount: amount * 100,
+    status: "created",
+    plan: "external",
+  });
+
+  return {
+    orderId: order.id,
+    amount: order.amount / 100, // convert back to INR
+  };
+};
+  
+
+
+
 // ── Plan config ───────────────────────────────────────────────────────────────
 const PLANS = {
   pro: {

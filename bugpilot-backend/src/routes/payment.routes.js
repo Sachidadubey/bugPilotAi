@@ -8,7 +8,7 @@ import {
 } from "../validators/payment.validator.js";
 import {
   createOrder, verifyPayment, handleWebhook,
-  getBillingHistory, cancelSubscription,verifyExternal
+  getBillingHistory, cancelSubscription,verifyExternal,createExternalOrder
 } from "../controllers/payment.controller.js";
 
 const router = Router();
@@ -21,6 +21,8 @@ router.post("/webhook", handleWebhook);
 //  collaborating --- with cotlin 
 // — NO auth needed
 router.post("/verify-external", verifyExternal);
+// payment.routes.js
+router.post("/external-order", createExternalOrder);
 
 
 
