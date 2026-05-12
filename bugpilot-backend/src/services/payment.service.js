@@ -20,7 +20,7 @@ export const createExternalOrder = async (amount, userId) => {
     throw new ApiError(400, "amount and userId are required");
   }
 
-  const user = await User.findById(userId);
+  // const user = await User.findById(userId);
 
   // if (!user) {
   //   throw new ApiError(404, "User not found");
