@@ -5,7 +5,7 @@ const paymentSchema = new mongoose.Schema(
     userId: {
       type: String,
       ref: "User",
-      required: false,
+      required: true,
       index: true,
     },
 
