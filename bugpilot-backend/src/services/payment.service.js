@@ -190,3 +190,19 @@ export const cancelSubscriptionService = async (userId) => {
   logger.info(`User ${userId} downgraded to free`);
 };
 
+
+// verify external payment (for mobile apps or other clients) ─────────────────────
+
+export const verifyExternalService = async ({ orderId, paymentId, signature }) => {
+  const body = `${orderId}|${paymentId}`;
+  const expected = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .update(body)
+    .digest("hex");
+
+  if (expected !== signature) {
+    throw new ApiError(400, "Invalid signature — payment verified nahi hua");
+  }
+
+  return { orderId, paymentId };
+};

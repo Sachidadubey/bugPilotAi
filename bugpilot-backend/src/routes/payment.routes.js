@@ -8,13 +8,21 @@ import {
 } from "../validators/payment.validator.js";
 import {
   createOrder, verifyPayment, handleWebhook,
-  getBillingHistory, cancelSubscription,
+  getBillingHistory, cancelSubscription,verifyExternal
 } from "../controllers/payment.controller.js";
 
 const router = Router();
 
 // Webhook — NO auth, NO json parser (needs raw body)
 router.post("/webhook", handleWebhook);
+
+
+
+//  collaborating --- with cotlin 
+// — NO auth needed
+router.post("/verify-external", verifyExternal);
+
+
 
 // Protected routes
 router.use(protect, requireVerified);
@@ -23,5 +31,6 @@ router.post  ("/order",    validate(createOrderSchema),   createOrder);
 router.post  ("/verify",   validate(verifyPaymentSchema), verifyPayment);
 router.get   ("/billing",  getBillingHistory);
 router.delete("/cancel",   cancelSubscription);
+
 
 export default router;

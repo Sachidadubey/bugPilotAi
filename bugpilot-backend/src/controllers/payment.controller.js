@@ -1,6 +1,7 @@
 import asyncHandler    from "../utils/asyncHandler.js";
 import ApiResponse     from "../utils/ApiResponse.js";
 import * as paymentSvc from "../services/payment.service.js";
+import crypto from "crypto";
 
 export const createOrder = asyncHandler(async (req, res) => {
   const data = await paymentSvc.createOrderService(req.user._id, req.body);
@@ -27,4 +28,15 @@ export const getBillingHistory = asyncHandler(async (req, res) => {
 export const cancelSubscription = asyncHandler(async (req, res) => {
   await paymentSvc.cancelSubscriptionService(req.user._id);
   res.status(200).json(new ApiResponse(200, null, "Subscription cancelled. You are now on free plan."));
+});
+
+export const verifyExternal = asyncHandler(async (req, res) => {
+  const { orderId, paymentId, signature } = req.body;
+
+  if (!orderId || !paymentId || !signature) {
+    throw new ApiError(400, "orderId, paymentId, signature — all are required  please send -- dost ");
+  }
+
+  const result = await paymentSvc.verifyExternalService({ orderId, paymentId, signature });
+  res.status(200).json(new ApiResponse(200, result, "Payment verified successfully"));
 });
