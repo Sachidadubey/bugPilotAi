@@ -2,6 +2,7 @@ import asyncHandler    from "../utils/asyncHandler.js";
 import ApiResponse     from "../utils/ApiResponse.js";
 import * as paymentSvc from "../services/payment.service.js";
 import crypto from "crypto";
+import ApiError from "../utils/ApiError.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
   const data = await paymentSvc.createOrderService(req.user._id, req.body);
