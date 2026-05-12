@@ -9,27 +9,55 @@ React + Vite web application for BugPilot AI. Handles JWT auth with auto-refresh
 The frontend is the primary web interface for BugPilot AI. Users register, verify email via OTP, and land on a dashboard where they paste code, error messages, log files, or screenshots and receive Gemini AI analysis back in seconds. Pro users get unlimited daily analyses. Admins get a separate role-protected panel to manage users and view platform revenue and usage analytics.
 
 ---
-****************************************************************************************
+
+---
+
 ## Live Demo
 
-| Platform | URL |
-|----------|-----|
+| Platform   | URL                                                        |
+| ---------- | ---------------------------------------------------------- |
 | 🌐 Web App | [bug-pilot-ai.vercel.app](https://bug-pilot-ai.vercel.app) |
 
-*****************************************************************************************
+---
+
+## 📸 Screenshots
+
+### Register & Login
+
+| Register                                    | Login                                 |
+| ------------------------------------------- | ------------------------------------- |
+| ![Register](../screenshots/08_register.png) | ![Login](../screenshots/07_login.png) |
+
+### Dashboard & AI Debugger
+
+| Dashboard                                     | AI Debugger                                 |
+| --------------------------------------------- | ------------------------------------------- |
+| ![Dashboard](../screenshots/01_dashboard.png) | ![Debugger](../screenshots/02_debugger.png) |
+
+### Debug History & Profile
+
+| Debug History                             | Profile                                   |
+| ----------------------------------------- | ----------------------------------------- |
+| ![History](../screenshots/03_history.png) | ![Profile](../screenshots/05_profile.png) |
+
+### Subscription Plans
+
+![Pricing](../screenshots/06_pricing.png)
+
+---
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Framework | React 18 |
-| Build tool | Vite |
-| Styling | Bootstrap 5 + Bootstrap Icons |
-| Routing | React Router v6 |
-| HTTP client | Axios with request/response interceptors |
-| Global state | React Context + useReducer |
-| Notifications | React Hot Toast |
-| Payments | Razorpay checkout (client-side JS SDK) |
+| Layer         | Technology                               |
+| ------------- | ---------------------------------------- |
+| Framework     | React 18                                 |
+| Build tool    | Vite                                     |
+| Styling       | Bootstrap 5 + Bootstrap Icons            |
+| Routing       | React Router v6                          |
+| HTTP client   | Axios with request/response interceptors |
+| Global state  | React Context + useReducer               |
+| Notifications | React Hot Toast                          |
+| Payments      | Razorpay checkout (client-side JS SDK)   |
 
 ---
 
@@ -97,6 +125,7 @@ bugpilot-frontend/
 **Dashboard** — Four stat cards showing total analyses, today's count, current plan, and remaining daily quota. Usage progress bar turns red when the user is near the free tier limit. Recent sessions table shows input type, language detected, status badge, and timestamp. Top languages breakdown displayed as a simple chart.
 
 **Debug** — The core page. Input type tabs switch between Code, Text/Error, Log, and Image. Mode tabs switch between Analyze, Fix, and Optimize — all sent to the same backend endpoint. Dark monospace textarea for code input. Drag-and-drop image upload with preview for screenshot analysis. Language selector with auto-detect or 8 manual options. On submit, loading spinner with "Analyzing with Gemini AI..." message. Results render as four cards:
+
 - Root Cause (red left border) — with severity badge (low / medium / high / critical)
 - Explanation (yellow left border)
 - Solution (green left border)
@@ -176,9 +205,7 @@ Add `vercel.json` to the frontend root before deploying to Vercel — without it
 
 ```json
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
 ```
 
@@ -205,4 +232,4 @@ The refresh token never touches JavaScript. XSS attacks that exfiltrate localSto
 
 ## Author
 
-sachida dhar  Dubey — B.Tech CSE, Technocrats Institute of Technology, Bhopal (RGPV University)
+sachida dhar Dubey — B.Tech CSE, Technocrats Institute of Technology, Bhopal (RGPV University)

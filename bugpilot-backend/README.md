@@ -12,20 +12,24 @@ Free tier: 10 analyses per day. Pro tier: unlimited.
 
 ---
 
+|Deployed on render----|
+| |
+![Render](../screenshots/10_render_deploy.png)
+
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js (ES Modules) |
-| Framework | Express.js |
-| Database | MongoDB Atlas + Mongoose |
-| Cache / OTP store | Upstash Redis |
-| AI | Google Gemini 2.5 Flash |
-| File storage | Cloudinary |
-| Payments | Razorpay |
-| Email | Nodemailer (Gmail SMTP) |
-| Logger | Winston |
-| Auth | JWT (access + refresh token rotation) |
+| Layer             | Technology                            |
+| ----------------- | ------------------------------------- |
+| Runtime           | Node.js (ES Modules)                  |
+| Framework         | Express.js                            |
+| Database          | MongoDB Atlas + Mongoose              |
+| Cache / OTP store | Upstash Redis                         |
+| AI                | Google Gemini 2.5 Flash               |
+| File storage      | Cloudinary                            |
+| Payments          | Razorpay                              |
+| Email             | Nodemailer (Gmail SMTP)               |
+| Logger            | Winston                               |
+| Auth              | JWT (access + refresh token rotation) |
 
 ---
 
@@ -49,24 +53,31 @@ src/
 ## Modules built
 
 ### Module 1 — Foundation
+
 Express setup, MongoDB + Redis connection, Winston logger, Helmet, CORS, rate limiting, health check, global error handler.
 
 ### Module 2 — Authentication
+
 Register, login, logout, JWT access + refresh token rotation, HTTP-only cookies, role-based access control, subscription middleware.
 
 ### Module 3 — Advanced Auth
+
 Email OTP verification (Redis TTL, SHA-256 hashed), resend OTP with spam protection, forgot password via OTP, reset password, change password, login attempt tracking, account lock after 5 failed attempts (15 min lockout).
 
 ### Module 4 — AI Debug Engine
+
 Submit code/text/log/screenshot → Gemini AI analysis → root cause + explanation + fix + corrected code + severity + references. Cloudinary for screenshot storage. Daily usage limits enforced via Redis atomic counters. Session history saved to MongoDB.
 
 ### Module 5 — Dashboard APIs
+
 User profile with avatar upload, usage stats with aggregation, debug history with search + filter + pagination, plan info, delete account.
 
 ### Module 6 — Payments
+
 Razorpay order creation, payment signature verification, webhook handling (raw body), pro plan activation, billing history, subscription cancellation.
 
 ### Module 7 — Admin Panel
+
 Dashboard stats, all users with search/filter/sort, user detail with debug + payment history, ban/unban users (immediate session invalidation), manual plan override, delete user, revenue analytics (monthly), AI usage analytics.
 
 ---

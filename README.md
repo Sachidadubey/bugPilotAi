@@ -9,14 +9,52 @@ Developers waste hours debugging. BugPilot AI takes your error message, code sni
 Free tier: 10 analyses per day. Pro tier: unlimited.
 
 ---
-*************************************************************************************************************************************************
+
+---
+
 ## Live Demo
 
-| Platform | URL |
-|----------|-----|
-| 🌐 Web App | [bug-pilot-ai.vercel.app](https://bug-pilot-ai.vercel.app) |
+| Platform       | URL                                                        |
+| -------------- | ---------------------------------------------------------- |
+| 🌐 Web App     | [bug-pilot-ai.vercel.app](https://bug-pilot-ai.vercel.app) |
 | ⚙️ Backend API | [bugpilotai.onrender.com](https://bugpilotai.onrender.com) |
-*************************************************************************************************************************************************
+
+---
+
+---
+
+## 📸 Screenshots
+
+### Register & Login
+
+| Register                                   | Login                                |
+| ------------------------------------------ | ------------------------------------ |
+| ![Register](./screenshots/08_register.png) | ![Login](./screenshots/07_login.png) |
+
+### Dashboard & AI Debugger
+
+| Dashboard                                    | AI Debugger                                |
+| -------------------------------------------- | ------------------------------------------ |
+| ![Dashboard](./screenshots/01_dashboard.png) | ![Debugger](./screenshots/02_debugger.png) |
+
+### Debug History & Profile
+
+| Debug History                            | Profile                                  |
+| ---------------------------------------- | ---------------------------------------- |
+| ![History](./screenshots/03_history.png) | ![Profile](./screenshots/05_profile.png) |
+
+### Subscription Plans
+
+![Pricing](./screenshots/06_pricing.png)
+
+### Deployment
+
+| Vercel (Frontend)                             | Render (Backend)                              |
+| --------------------------------------------- | --------------------------------------------- |
+| ![Vercel](./screenshots/09_vercel_deploy.png) | ![Render](./screenshots/10_render_deploy.png) |
+
+---
+
 ## Repository structure
 
 ```
@@ -31,28 +69,28 @@ bugPilotAi/
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js (ES Modules) |
-| Framework | Express.js |
-| Database | MongoDB Atlas + Mongoose |
-| Cache / OTP store | Upstash Redis |
-| AI | Google Gemini 2.0 Flash Lite |
-| File storage | Cloudinary |
-| Payments | Razorpay |
-| Email | Nodemailer (Gmail SMTP) |
-| Logger | Winston |
-| Auth | JWT (access + refresh token rotation) |
-| Frontend | React 18 + Vite + Bootstrap 5 |
-| HTTP client | Axios (interceptors + auto-refresh on 401) |
-| Chrome extension | Manifest V3, Side Panel API |
-| VS Code extension | VS Code Extension API, Webview |
+| Layer             | Technology                                 |
+| ----------------- | ------------------------------------------ |
+| Runtime           | Node.js (ES Modules)                       |
+| Framework         | Express.js                                 |
+| Database          | MongoDB Atlas + Mongoose                   |
+| Cache / OTP store | Upstash Redis                              |
+| AI                | Google Gemini 2.0 Flash Lite               |
+| File storage      | Cloudinary                                 |
+| Payments          | Razorpay                                   |
+| Email             | Nodemailer (Gmail SMTP)                    |
+| Logger            | Winston                                    |
+| Auth              | JWT (access + refresh token rotation)      |
+| Frontend          | React 18 + Vite + Bootstrap 5              |
+| HTTP client       | Axios (interceptors + auto-refresh on 401) |
+| Chrome extension  | Manifest V3, Side Panel API                |
+| VS Code extension | VS Code Extension API, Webview             |
 
 ---
 
 ## What is built
 
-### Backend — 7 
+### Backend — 7
 
 **Module 1 — Foundation**
 Express setup, MongoDB + Redis connection, Winston logger, Helmet, CORS, rate limiting, health check, global error handler.
@@ -184,4 +222,4 @@ ES Module imports are hoisted — they execute before `dotenv.config()` runs. In
 
 ## Author
 
-sachida dhar  Dubey — B.Tech CSE, Technocrats Institute of Technology, Bhopal (RGPV University)
+sachida dhar Dubey — B.Tech CSE, Technocrats Institute of Technology, Bhopal (RGPV University)
